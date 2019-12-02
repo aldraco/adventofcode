@@ -8,6 +8,18 @@ lang_extensions=(["python"]="py" ["ruby"]="rb" ["golang"]="go" ["bash"]="sh")
 # Create the new module for the day
 FILENAME="${2}/advent${1}.${lang_extensions[$2]}"
 mkdir -p $2
+
+# be nice
+if test -f $FILENAME; then
+  echo "This file already exists!"
+  read -p "Do you want to overwrite it?" yn
+  case $yn in
+    [yY]* ) echo "Continuing";;
+    [nN]* ) echo "Exiting."; exit;;
+    * ) echo "Please answer y or n.";;
+  esac
+fi
+
 touch $FILENAME
 
 # Put some basic template stuff in there if we have one
