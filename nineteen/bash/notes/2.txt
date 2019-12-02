@@ -1,0 +1,35 @@
+# Part 1
+
+https://opensource.com/article/18/5/you-dont-know-bash-intro-bash-arrays
+https://www.tutorialkart.com/bash-shell-scripting/bash-split-string/
+
+Hardest part here was the syntax for evaluating a variable vs a value etc.,
+especially when considering arrays and accessing indices with other variables.
+
+Also learned about using `echo` to store outputs into a variable/value, and
+a few new tricks for `read` (namely that IFS must match the current output of
+what's coming into stdin.)
+
+https://www.tldp.org/LDP/abs/html/comparison-ops.html
+
+Comparisons still aren't clear to me, but I'm hoping it is mostly a syntax
+issue.
+
+https://coderwall.com/p/s8n9qa/default-parameter-value-in-bash
+
+Very cool default parameter helper.
+
+# Part 2
+
+Challenge here was learning how to take the parameterized script (12 and 2),
+and do the following:
+ - store the output in a variable
+ - compare that to the expected value (probably another input)
+ - do this within 2 nested loops!
+
+for i in {22..99}; do for j in {0..99}; do echo "IJ: $i, $j"; \
+if [ `cat ../data/2.txt | ./advent2.sh $i $j` -eq 19690720 ]; \
+then echo "found it: $i, $j"; break 2; fi; done; done;
+
+ * `break N` breaks out of N nested levels of a loop
+ * SPACES matter for the comparison syntax, gross

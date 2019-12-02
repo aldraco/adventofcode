@@ -24,3 +24,8 @@ while read -r opcode loc1 loc2 outloc <<< $(echo ${data[@]:$s:4}); do
   fi
   s=$s+4
 done
+
+echo "0"
+
+# command to solve part 2:
+# for i in {22..99}; do for j in {0..99}; do echo "IJ: $i, $j"; if [ `cat ../data/2.txt | ./advent2.sh $i $j` -eq 19690720 ]; then echo "found it: $i, $j"; break 2; fi; done; done;
