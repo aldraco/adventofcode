@@ -18,6 +18,16 @@ func calcFuel(m int64) int64 {
   return (m / 3) - 2
 }
 
+func calcTotalFuel(m int64) int64 {
+  var total int64
+  newFuel := calcFuel(m)
+  for (newFuel >= 0) {
+    total += newFuel
+    newFuel = calcFuel(newFuel)
+  }
+  return total
+}
+
 func main() {
   dat, err := ioutil.ReadFile("../data/1.txt")
   check(err)
@@ -29,7 +39,7 @@ func main() {
     }
     val, err := strconv.ParseInt(v, 10, 0)
     check(err)
-    total += calcFuel(val)
+    total += calcTotalFuel(val)
   }
 fmt.Println(total)
 }
