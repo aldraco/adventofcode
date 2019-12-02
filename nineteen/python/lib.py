@@ -1,6 +1,6 @@
 import argparse
 
-FILE_INPUT_SLUG = "data/{}.txt"
+FILE_INPUT_SLUG = "../data/{}.txt"
 
 
 def parse_args():

@@ -1,30 +1,17 @@
 #! /bin/bash
-set -ex
+set -e
 
-# Clean up
-echo "Cleaning up pycache"
-rm -rf __pycache__
+# Map language to extension
+declare -A lang_extensions
+lang_extensions=(["python"]="py" ["ruby"]="rb" ["golang"]="go" ["bash"]="sh")
 
 # Create the new module for the day
-FILENAME="advent${1}.py"
+FILENAME="${2}/advent${1}.${lang_extensions[$2]}"
+mkdir -p $2
+touch $FILENAME
 
-# Put some basic template stuff in there
-cat > $FILENAME <<- EOM
-import lib
-
-
-def first(data, debug=False):
-  pass
-
-
-def second(data, debug=False):
-  pass
-
-
-if __name__ == "__main__":
-  args = lib.parse_args()
-  ans = first(args.data, debug=args.debug)
-  print(ans)
-  ans2 = second(args.data, debug=args.debug)
-  print(ans2)
-EOM
+# Put some basic template stuff in there if we have one
+TEMPLATE=templates/$2.${lang_extensions[$2]}
+if test -f $TEMPLATE; then
+  sed "s/ADVENT_DAY/$1/g" <<< cat $TEMPLATE | tee $FILENAME
+fi
