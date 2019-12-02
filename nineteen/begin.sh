@@ -21,6 +21,7 @@ if test -f $FILENAME; then
 fi
 
 touch $FILENAME
+chmod 774 $FILENAME
 
 # Put some basic template stuff in there if we have one
 TEMPLATE=templates/$2.${lang_extensions[$2]}
