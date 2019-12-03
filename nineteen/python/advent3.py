@@ -6,7 +6,7 @@ def manhattan(p1, p2):
 
 
 class Point:
-    def __init__(self, x, y):
+    def __init__(self, x, y, step=None):
         self.x = x
         self.y = y
 
@@ -27,18 +27,18 @@ class Point:
         amt = int(instruction[1:])
         if direction == "U":
             # increase Y
-            return Point(self.x, self.y + amt)
+            return Point(self.x, self.y + amt, step=None)
         elif direction == "D":
-            return Point(self.x, self.y - amt)
+            return Point(self.x, self.y - amt, step=None)
         elif direction == "R":
-            return Point(self.x + amt, self.y)
+            return Point(self.x + amt, self.y, step=None)
         elif direction == "L":
-            return Point(self.x - amt, self.y)
+            return Point(self.x - amt, self.y, step=None)
 
 
 class Span:
     """A line, from one point to another."""
-    def __init__(self, p1, p2):
+    def __init__(self, p1, p2, base_step=None):
         # Always sort points X-wise, Y-wise
         if p1 < p2:
             self.p1 = p1
@@ -50,6 +50,9 @@ class Span:
         self.vertical = p1.x == p2.x
         self.horizontal = not self.vertical
         self._points = None
+        self._origin = p1
+
+        self.base_step = base_step
 
     def __repr__(self):
         return f"{self.p1} to {self.p2}"
@@ -68,6 +71,14 @@ class Span:
         the same space.
         """
         return [pt for pt in other.points if self.contains(pt)]
+
+    def steps_to_point(self, point):
+        if not self.contains(point):
+            return None
+        if self.vertical:
+            return self.base_step + abs(point.y - self._origin.y)
+        else:
+            return self.base_step + abs(point.x - self._origin.x)
 
     @property
     def points(self):
@@ -89,7 +100,7 @@ class Span:
 
 
 def first(data, debug=False):
-  origin = Point(0, 0)
+  origin = Point(0, 0, step=0)
   # mimic some instructions
   instructions = data[0].split(",")
   # want to turn these into spans
@@ -135,15 +146,62 @@ def first(data, debug=False):
 
 
 def second(data, debug=False):
-  return None
+  origin = Point(0, 0)
+  # mimic some instructions
+  instructions = data[0].split(",")
+  # want to turn these into spans
+  spans = []
+  old = origin
+  steps = 0
+  for inst in instructions:
+      new = old.modify(inst)
+      n = Span(old, new, base_step=steps)
+      spans.append(n)
+      old = new
+      steps += int(inst[1:])
+  print(spans)
+
+  spans2 = []
+  old = origin
+  steps = 0
+  instructions2 = data[1].split(",")
+  for inst in instructions2:
+    new = old.modify(inst)
+    n = Span(old, new, base_step=steps)
+    spans2.append(n)
+    old = new
+    steps += int(inst[1:])
+  print(spans2)
+
+  # now find intersection points
+  pts_to_check = []
+  for a in spans:
+      for b in spans2:
+          pts = a.intersects(b)
+          if pts:
+              print("Intersection:")
+              print(a, b)
+              print(list(str(p) for p in pts))
+              pts = [(a, b, p) for p in pts]
+              pts_to_check += pts
+  # NOW take the manhattan distance for each, and figure out which is the closest
+  min = None  # will be a Tuple
+  for a, b, pt in pts_to_check:
+      if pt == origin:
+          continue
+      dist = (a.steps_to_point(pt)) + (b.steps_to_point(pt))
+      if not min or dist < min[0]:
+          min = (dist, pt)
+  print("the closest point we found:")
+  print(min[0], str(min[1]))
 
 if __name__ == "__main__":
   args = lib.parse_args()
   data = args.data or lib.load_data(3)
   data = list(data)
 
-  ans = first(data, debug=args.debug)
-  print(ans)
+  # ans = first(data, debug=args.debug)
+  # print(ans)
   ans2 = second(data, debug=args.debug)
   print(ans2)
 
