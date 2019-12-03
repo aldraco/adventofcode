@@ -13,10 +13,10 @@ func check(e error) {
 	}
 }
 
-func OpToInt(orig []string) []int64 {
-	r := make([]int64, len(orig))
+func OpToInt(orig []string) []int {
+	r := make([]int, len(orig))
 	for i, v := range orig {
-		val, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+		val, err := strconv.Atoi(strings.TrimSpace(v))
 		check(err)
 		r[i] = val
 	}
@@ -24,8 +24,8 @@ func OpToInt(orig []string) []int64 {
 }
 
 func main() {
-	var i int64
-	var j int64
+	var i int
+	var j int
 out:
 	for i = 0; i <= 99; i++ {
 		for j = 0; j <= 99; j++ {
@@ -39,7 +39,7 @@ out:
 	}
 }
 
-func calc(def1 int64, def2 int64) int64 {
+func calc(def1 int, def2 int) int {
 	dat, err := ioutil.ReadFile("../data/2.txt")
 	check(err)
 
@@ -49,7 +49,7 @@ func calc(def1 int64, def2 int64) int64 {
 
 	i := 0
 	opSize := 4
-	op := make([]int64, opSize)
+	op := make([]int, opSize)
 
 	for len(compMem) > i {
 		op = compMem[i : i+opSize]
