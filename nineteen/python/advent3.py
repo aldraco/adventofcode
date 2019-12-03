@@ -1,7 +1,6 @@
 import lib
 
 def manhattan(p1, p2):
-    # ab diff of cartesian coords
     return abs(p1.x - p2.x) + abs(p1.y - p2.y)
 
 
@@ -100,10 +99,8 @@ class Span:
 
 
 def first(data, debug=False):
-  origin = Point(0, 0, step=0)
-  # mimic some instructions
+  origin = Point(0, 0)
   instructions = data[0].split(",")
-  # want to turn these into spans
   spans = []
   old = origin
   for inst in instructions:
@@ -111,7 +108,6 @@ def first(data, debug=False):
       n = Span(old, new)
       spans.append(n)
       old = new
-  print(spans)
 
   spans2 = []
   old = origin
@@ -121,7 +117,6 @@ def first(data, debug=False):
     n = Span(old, new)
     spans2.append(n)
     old = new
-  print(spans2)
 
   # now find intersection points
   pts_to_check = []
@@ -129,11 +124,8 @@ def first(data, debug=False):
       for b in spans2:
           pts = a.intersects(b)
           if pts:
-              print("Intersection:")
-              print(a, b)
-              print(list(str(p) for p in pts))
               pts_to_check += pts
-  # NOW take the manhattan distance for each, and figure out which is the closest
+
   min = None  # will be a Tuple
   for pt in pts_to_check:
       if pt == origin:
@@ -141,15 +133,13 @@ def first(data, debug=False):
       dist = manhattan(pt, origin)
       if not min or dist < min[0]:
           min = (dist, pt)
-  print("the closest point we found:")
-  print(min[0], str(min[1]))
+  return min[0]
 
 
 def second(data, debug=False):
   origin = Point(0, 0)
-  # mimic some instructions
+
   instructions = data[0].split(",")
-  # want to turn these into spans
   spans = []
   old = origin
   steps = 0
@@ -159,7 +149,6 @@ def second(data, debug=False):
       spans.append(n)
       old = new
       steps += int(inst[1:])
-  print(spans)
 
   spans2 = []
   old = origin
@@ -171,7 +160,6 @@ def second(data, debug=False):
     spans2.append(n)
     old = new
     steps += int(inst[1:])
-  print(spans2)
 
   # now find intersection points
   pts_to_check = []
@@ -179,32 +167,24 @@ def second(data, debug=False):
       for b in spans2:
           pts = a.intersects(b)
           if pts:
-              print("Intersection:")
-              print(a, b)
-              print(list(str(p) for p in pts))
               pts = [(a, b, p) for p in pts]
               pts_to_check += pts
-  # NOW take the manhattan distance for each, and figure out which is the closest
-  min = None  # will be a Tuple
+
+  min = None
   for a, b, pt in pts_to_check:
       if pt == origin:
           continue
       dist = (a.steps_to_point(pt)) + (b.steps_to_point(pt))
       if not min or dist < min[0]:
           min = (dist, pt)
-  print("the closest point we found:")
-  print(min[0], str(min[1]))
+  return min[0]
 
 if __name__ == "__main__":
   args = lib.parse_args()
   data = args.data or lib.load_data(3)
   data = list(data)
 
-  # ans = first(data, debug=args.debug)
-  # print(ans)
+  ans = first(data, debug=args.debug)
+  print(ans)
   ans2 = second(data, debug=args.debug)
   print(ans2)
-
- # need to figure out intersections where the N wires cross
- # which is - what points in space do they occupy?
- # then figure the distance of all of those points to the central point.
