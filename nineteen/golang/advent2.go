@@ -52,16 +52,20 @@ func calc(def1 int, def2 int) int {
 	opSize := 4
 	op := make([]int, opSize)
 
+  out:
 	for i := 0; i < len(compMem); i += opSize {
 		op = compMem[i : i+opSize]
 
-		if op[0] == 99 {
-			break
-		} else if op[0] == 1 {
-			compMem[op[3]] = compMem[op[1]] + compMem[op[2]]
-		} else if op[0] == 2 {
-			compMem[op[3]] = compMem[op[1]] * compMem[op[2]]
-		}
+    switch op[0] {
+    case 99:
+      break out
+    case 1:
+      compMem[op[3]] = compMem[op[1]] + compMem[op[2]]
+    case 2:
+      compMem[op[3]] = compMem[op[1]] * compMem[op[2]]
+    default:
+      fmt.Println("Something is wrong.")
+    }
 	}
-	return compMem[0]
+  return compMem[0]
 }
