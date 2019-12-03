@@ -13,6 +13,7 @@ func check(e error) {
 	}
 }
 
+// Convert a 4-Array of string to ints.
 func OpToInt(orig []string) []int {
 	r := make([]int, len(orig))
 	for i, v := range orig {
@@ -23,15 +24,16 @@ func OpToInt(orig []string) []int {
 	return r
 }
 
+// Calculate solution for part 2, day 2.
 func main() {
 	var i int
 	var j int
 out:
 	for i = 0; i <= 99; i++ {
 		for j = 0; j <= 99; j++ {
-			fmt.Println(i, j)
 			t := calc(i, j)
 			if t == 19690720 {
+        fmt.Println(i, j)
 				fmt.Println("Works!")
 				break out
 			}
@@ -39,19 +41,18 @@ out:
 	}
 }
 
+// Calculate the final computer memory state, given memory values for pos 1 and 2.
 func calc(def1 int, def2 int) int {
 	dat, err := ioutil.ReadFile("../data/2.txt")
 	check(err)
 
 	compMem := OpToInt(strings.Split(string(dat), ","))
-	compMem[1] = def1
-	compMem[2] = def2
+	compMem[1], compMem[2] = def1, def2
 
-	i := 0
 	opSize := 4
 	op := make([]int, opSize)
 
-	for len(compMem) > i {
+	for i := 0; i < len(compMem); i += opSize {
 		op = compMem[i : i+opSize]
 
 		if op[0] == 99 {
@@ -61,7 +62,6 @@ func calc(def1 int, def2 int) int {
 		} else if op[0] == 2 {
 			compMem[op[3]] = compMem[op[1]] * compMem[op[2]]
 		}
-		i = i + 4
 	}
 	return compMem[0]
 }
