@@ -3,12 +3,9 @@ from collections import Counter
 
 def check(pw):
     try:
-        asstr = str(pw)
-        assert len(asstr) == 6, "not long enough"
         # check 2 adjacent digits are the same
-        assert len(set(asstr)) < len(asstr), "no repeats"
         c = Counter()
-        for i in asstr:
+        for i in pw:
             c[i] += 1
 
         # assert there is a double
@@ -19,21 +16,14 @@ def check(pw):
         assert 2 in counts
 
         # always increase or stay the same
-        assert "".join(sorted(asstr)) == asstr
-        return True
+        assert "".join(sorted(pw)) == pw
+        return 1
     except AssertionError:
-        return False
+        return 0
 
 
 def first(data, debug=False):
-  c = 0
-  print(check(112233))
-  print(check(123444))
-  print(check(111122))
-  for pw in range(387638, 919124):
-      if check(pw) is True:
-          c += 1
-  return c
+  print(sum(check(str(pw)) for pw in range(387638, 919124)))
 
 
 if __name__ == "__main__":
