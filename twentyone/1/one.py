@@ -5,10 +5,8 @@ def main():
     print(sum(count_increases_in_threes(data)))
 
 def count_increases(data):
-    prev = data[0]
     for i in range(1, len(data)):
-        yield 1 if data[i] > prev else 0
-        prev = data[i]
+        yield 1 if data[i] > data[i-1] else 0
 
 def count_increases_in_threes(data):
     prev_window = sum(data[:3])
